@@ -5,9 +5,13 @@ export default function Home() {
   const [pgn, setPgn] = useState("");
 
   async function saveGame() {
-    await supabase.from("games").insert([{ pgn }]);
-    alert("Game saved!");
-    setPgn("");
+    const { error } = await supabase.from("games").insert([{ pgn }]);
+    if (error) {
+      alert("Error saving game: " + error.message);
+    } else {
+      alert("Game saved!");
+      setPgn("");
+    }
   }
 
   return (
@@ -20,9 +24,8 @@ export default function Home() {
         onChange={(e) => setPgn(e.target.value)}
         placeholder="Paste PGN here"
       />
-      <br />
+      <br /><br />
       <button onClick={saveGame}>Save Game</button>
     </div>
   );
 }
-
